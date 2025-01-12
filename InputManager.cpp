@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <iostream>
 #include <vector>
+#include <set>
 using namespace std;
 class InputManager
 {
@@ -14,26 +15,27 @@ public:
         Held,
         Released
     };
-    bool setBinds(int key,string Actions);
+    bool setBinds(string Actions,int key);
     void Update();
     void ResetKeyState(int V_Key);
     keyState GetKeyState(int V_Key);
     int WhichKey();
     vector<int> WhichKeyMultiple();
-
+    unordered_map<string,int> keyBinds;
 private:
-    unordered_map<int,string> keyBinds;
     unordered_map<int, keyState> keyStates;
     unordered_map<int, bool> lastkeyStates;
+    set<int> usedKeys;
 };
 
-bool InputManager::setBinds(int key,string Actions)
+bool InputManager::setBinds(string Actions,int key)
 {
-    if(keyBinds.find(key) == keyBinds.end()){
-    keyBinds[key] = Actions;
-    return true;
+    if(usedKeys.find(key) != usedKeys.end()){
+        return false;
     }
-    return false;
+    keyBinds[Actions] = key;
+    usedKeys.insert(key);
+    return true;
 }
 void InputManager::Update()
 {
@@ -74,13 +76,14 @@ InputManager::keyState InputManager::GetKeyState(int V_Key)
 {
     return keyStates[V_Key];
 }
-
-int InputManager::WhichKey(){
-    for(auto it = keyBinds.begin(); it != keyBinds.end(); it++){
-        int key = it -> first;
-        if (IsKeyDown(key)) {
-            return key; 
-        }
+int main(){
+    InputManager IM; 
+    cout << IM.setBinds("Jump",VK_SPACE);
+    while(1){
+    IM.Update();
+    if(IM.GetKeyState(IM.keyBinds["Jump"]) == IM.Idle){
+        cout << "Jumping" << endl;
+    }
     }
     return 0;
 }
