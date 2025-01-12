@@ -76,14 +76,3 @@ InputManager::keyState InputManager::GetKeyState(int V_Key)
 {
     return keyStates[V_Key];
 }
-int main(){
-    InputManager IM; 
-    cout << IM.setBinds("Jump",VK_SPACE);
-    while(1){
-    IM.Update();
-    if(IM.GetKeyState(IM.keyBinds["Jump"]) == IM.Idle){
-        cout << "Jumping" << endl;
-    }
-    }
-    return 0;
-}
