@@ -1,6 +1,6 @@
 #include <Windows.h>
 #include <iostream>
-bool shift = false;
+#include <vector>
 bool IsKeyDown(int key)
 {
     return GetAsyncKeyState(key) & 0x8000;
@@ -22,7 +22,7 @@ bool MultiKeysPressed(std::initializer_list<int> keys)
     }
     return true;
 }
-int WhichKey(){
+int WhichKeyUniversal(){
     for (int key = 0x01; key <= 0xFE; ++key) {
         if (IsKeyDown(key)) {
             return key; 
@@ -30,3 +30,13 @@ int WhichKey(){
     }
     return 0; 
 }
+std::vector<int> WhichKeyUniversalMultiple(){
+    std::vector<int> MultiKeys;
+        for (int key = 0x01; key <= 0xFE; ++key) {
+        if (IsKeyDown(key)) {
+            MultiKeys.push_back(key);
+        }
+    }
+    return MultiKeys;
+}
+int main(){}

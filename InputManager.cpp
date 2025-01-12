@@ -1,31 +1,38 @@
 #include "KeyboardInput.cpp"
 #include <unordered_map>
 #include <iostream>
+#include <vector>
 using namespace std;
 class InputManager
 {
 public:
-    enum KeyState
+    enum keyState
     {
         Idle,
         Pressed,
         Held,
         Released
     };
-    void setBinds(int key, string Actions);
+    bool setBinds(int key,string Actions);
     void Update();
-    void ResetKeyStates(int V_Key);
-    KeyState GetKeyState(int V_Key);
+    void ResetKeyState(int V_Key);
+    keyState GetKeyState(int V_Key);
+    int WhichKey();
+    vector<int> WhichKeyMultiple();
 
 private:
-    unordered_map<string, int> keyBinds;
-    unordered_map<int, KeyState> KeyStates;
-    unordered_map<int, bool> lastKeyStates;
+    unordered_map<int,string> keyBinds;
+    unordered_map<int, keyState> keyStates;
+    unordered_map<int, bool> lastkeyStates;
 };
 
-void InputManager::setBinds(int key, string Actions)
+bool InputManager::setBinds(int key,string Actions)
 {
-    keyBinds[Actions] = key;
+    if(keyBinds.find(key) == keyBinds.end()){
+    keyBinds[key] = Actions;
+    return true;
+    }
+    return false;
 }
 void InputManager::Update()
 {
@@ -34,35 +41,45 @@ void InputManager::Update()
         bool isPressed = IsKeyDown(key);
         if (isPressed)
         {
-            if (!lastKeyStates[key])
+            if (!lastkeyStates[key])
             {
-                KeyStates[key] = Pressed; 
+                keyStates[key] = Pressed; 
             }
             else
             {
-                KeyStates[key] = Held; 
+                keyStates[key] = Held; 
             }
         }
         else
         {
-            if (lastKeyStates[key])
+            if (lastkeyStates[key])
             {
-                KeyStates[key] = Released; 
+                keyStates[key] = Released; 
             }
             else
             {
-                KeyStates[key] = Idle; 
+                keyStates[key] = Idle; 
             }
         }
-        lastKeyStates[key] = isPressed;
+        lastkeyStates[key] = isPressed;
     }
 }
 
-void InputManager::ResetKeyStates(int V_Key)
+void InputManager::ResetKeyState(int V_Key)
 {
-    KeyStates[V_Key] = Idle;
+    keyStates[V_Key] = Idle;
 }
-InputManager::KeyState InputManager::GetKeyState(int V_Key)
+InputManager::keyState InputManager::GetKeyState(int V_Key)
 {
-    return KeyStates[V_Key];
+    return keyStates[V_Key];
+}
+
+int InputManager::WhichKey(){
+    for(auto it = keyBinds.begin(); it != keyBinds.end(); it++){
+        int key = it -> first;
+        if (IsKeyDown(key)) {
+            return key; 
+        }
+    }
+    return 0;
 }
