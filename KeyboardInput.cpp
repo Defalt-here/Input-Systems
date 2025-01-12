@@ -39,4 +39,3 @@ std::vector<int> WhichKeyUniversalMultiple(){
     }
     return MultiKeys;
 }
-int main(){}

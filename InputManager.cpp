@@ -1,4 +1,5 @@
 #include "KeyboardInput.cpp"
+#include "MouseInput.cpp"
 #include <unordered_map>
 #include <iostream>
 #include <vector>
