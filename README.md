@@ -9,4 +9,4 @@
 </ul>
 
 <h1>How to use</h1>
-Download all files and include "InputSystem.cpp" in your projects it will expose the neccasary functions
+Download all files and include "InputManager.cpp" in your projects it will expose the neccasary functions
